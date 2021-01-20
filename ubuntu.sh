@@ -1,4 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
+
+release=xenial # 16.04
+mirrors=mirrors.ustc.edu.cn
+
 folder=ubuntu-fs
 if [ -d "$folder" ]; then
 	first=1
@@ -22,7 +26,7 @@ if [ "$first" != 1 ];then
 		*)
 			echo "unknown architecture"; exit 1 ;;
 		esac
-		wget "https://partner-images.canonical.com/core/disco/current/ubuntu-disco-core-cloudimg-${archurl}-root.tar.gz" -O $tarball
+		wget "https://partner-images.canonical.com/core/$release/current/ubuntu-$release-core-cloudimg-arm64-root.tar.gz" -O $tarball
 	fi
 	cur=`pwd`
 	mkdir -p "$folder"
@@ -30,7 +34,8 @@ if [ "$first" != 1 ];then
 	echo "decompressing ubuntu image"
 	proot --link2symlink tar -xf ${cur}/${tarball} --exclude='dev'||:
 	echo "fixing nameserver, otherwise it can't connect to the internet"
-	echo "nameserver 1.1.1.1" > etc/resolv.conf
+	echo "nameserver 8.8.8.8" > etc/resolv.conf
+	sed -i.bak -e "s#ports.ubuntu.com#$mirrors#" etc/apt/sources.list
 	cd "$cur"
 fi
 mkdir -p binds
