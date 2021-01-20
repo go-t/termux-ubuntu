@@ -3,6 +3,8 @@
 release=xenial # 16.04
 mirrors=mirrors.ustc.edu.cn
 
+pkg install -y wget proot
+
 folder=ubuntu-fs
 if [ -d "$folder" ]; then
 	first=1
